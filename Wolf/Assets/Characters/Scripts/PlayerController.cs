@@ -22,7 +22,6 @@ public class PlayerController : MonoBehaviour
         // Calculate the input velocity for the animations
         float inputMagnitude = moveDirection.magnitude;
         animator.SetFloat("Speed", inputMagnitude, 0f, Time.deltaTime); // Activate the animation
-        Debug.Log("Speed: " + inputMagnitude);
 
         // Check if there is movement input
         if (moveDirection.magnitude >= 0.1f)
