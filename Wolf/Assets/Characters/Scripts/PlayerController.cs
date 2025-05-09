@@ -1,41 +1,68 @@
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+[RequireComponent(typeof(CharacterController))]
+public abstract class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 10f;
-    public float turnSpeed = 700f;
+    [SerializeField] protected float moveSpeed = 10f;            // Movement speed
+    private CharacterController controller; // Reference to the CharacterController
+    protected Transform cam;                  // Reference to the main camera's transform
+    protected Animator animator;             // Reference to the Animator component
 
-    private Animator animator;
-
-    void Start()
+    protected virtual void Start()
     {
-        animator = GetComponent<Animator>();
+        controller = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>(); // Assumes Animator is on a child model
     }
 
-    void Update()
+    protected virtual void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        // Read input
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
 
-        Vector3 moveDirection = new Vector3(horizontal, 0f, vertical).normalized;
+        // Calculate camera-relative direction
+        Vector3 camForward = cam.forward;
+        Vector3 camRight = cam.right;
 
-        // Calculate the input velocity for the animations
-        float inputMagnitude = moveDirection.magnitude;
-        animator.SetFloat("Speed", inputMagnitude, 0f, Time.deltaTime); // Activate the animation
+        // Flatten the direction vectors so the player doesn't move vertically
+        camForward.y = 0f;
+        camRight.y = 0f;
+        camForward.Normalize();
+        camRight.Normalize();
 
-        // Check if there is movement input
-        if (moveDirection.magnitude >= 0.1f)
+        // Combine input with camera direction
+        Vector3 move = camForward * verticalInput + camRight * horizontalInput;
+
+        Debug.Log("verticalInput: " + verticalInput);
+        Debug.Log("horizontalInput: " + horizontalInput);
+        Debug.Log("Move: " + move);
+
+        // Move the character
+        if (move.magnitude > 0.1f)
         {
-            // Calculate the rotation angle towards the movment direction
-            float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+            controller.Move(move.normalized * moveSpeed * Time.deltaTime);
 
-            // Rotate to the angle target
-            float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetAngle, turnSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            // Move the character forward
-            Vector3 move = transform.forward * moveSpeed * Time.deltaTime;
-            transform.Translate(move, Space.World);
+            // Rotate character to face movement direction
+            Quaternion targetRotation = Quaternion.LookRotation(move);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 20f);
         }
+
+        // Update animation
+        if (animator != null)
+        {
+            float speed = move.magnitude;
+            animator.SetFloat("Speed", speed > 0.1f ? 1f : 0f);
+        }
+    }
+
+    protected virtual void FixedUpdate(){}
+
+    public void CreateCamera(GameObject cameraPrefab){
+        // Create camera and assign player
+        GameObject createdCamera = Instantiate(cameraPrefab);
+        CameraFollow camScript = createdCamera.GetComponent<CameraFollow>();
+        camScript.player = transform;
+
+        cam = createdCamera.transform;
     }
 }

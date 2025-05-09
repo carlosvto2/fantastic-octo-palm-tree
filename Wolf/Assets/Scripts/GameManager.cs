@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     public Transform spawnPoint;
 
-    public CameraFollow PlayerCamera;
+    public GameObject cameraPrefab;
 
     void Start()
     {
@@ -15,7 +15,6 @@ public class GameManager : MonoBehaviour
         int randomRole = Random.Range(0, 2); 
 
         GameObject chosenPrefab;
-
         if (randomRole == 0)
         {
             chosenPrefab = villagerPrefab;
@@ -25,10 +24,9 @@ public class GameManager : MonoBehaviour
             chosenPrefab = wolfPrefab;
         }
 
-        // Instantiate the chosen character
+        // Instantiate the chosen character and create his camera
         GameObject ChosenCharacter = Instantiate(chosenPrefab, spawnPoint.position, spawnPoint.rotation);
-
-        // Set the player for the follow camera
-        PlayerCamera.player = ChosenCharacter.transform;
+        PlayerController CharacterScript = ChosenCharacter.GetComponent<PlayerController>();
+        CharacterScript.CreateCamera(cameraPrefab);
     }
 }
