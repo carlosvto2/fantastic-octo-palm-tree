@@ -23,13 +23,10 @@ public class GameManager : MonoBehaviour
         {
             chosenPrefab = wolfPrefab;
         }
-        // Instantiate the chosen character
-        GameObject ChosenCharacter = Instantiate(chosenPrefab, spawnPoint.position, spawnPoint.rotation);
 
-        
-        // Create camera and assign player
-        GameObject camera = Instantiate(cameraPrefab);
-        CameraFollow camScript = camera.GetComponent<CameraFollow>();
-        camScript.player = ChosenCharacter.transform;
+        // Instantiate the chosen character and create his camera
+        GameObject ChosenCharacter = Instantiate(chosenPrefab, spawnPoint.position, spawnPoint.rotation);
+        PlayerController CharacterScript = ChosenCharacter.GetComponent<PlayerController>();
+        CharacterScript.CreateCamera(cameraPrefab);
     }
 }

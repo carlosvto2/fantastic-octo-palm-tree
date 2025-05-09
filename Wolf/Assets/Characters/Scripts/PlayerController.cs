@@ -1,25 +1,24 @@
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerController : MonoBehaviour
+public abstract class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 10f;            // Movement speed
+    [SerializeField] protected float moveSpeed = 10f;            // Movement speed
     private CharacterController controller; // Reference to the CharacterController
-    private Transform cam;                  // Reference to the main camera's transform
-    private Animator animator;              // Reference to the Animator component
+    protected Transform cam;                  // Reference to the main camera's transform
+    protected Animator animator;             // Reference to the Animator component
 
-    void Start()
+    protected virtual void Start()
     {
         controller = GetComponent<CharacterController>();
-        cam = Camera.main.transform;
         animator = GetComponentInChildren<Animator>(); // Assumes Animator is on a child model
     }
 
-    void Update()
+    protected virtual void Update()
     {
         // Read input
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
 
         // Calculate camera-relative direction
         Vector3 camForward = cam.forward;
@@ -32,7 +31,11 @@ public class PlayerController : MonoBehaviour
         camRight.Normalize();
 
         // Combine input with camera direction
-        Vector3 move = camForward * v + camRight * h;
+        Vector3 move = camForward * verticalInput + camRight * horizontalInput;
+
+        Debug.Log("verticalInput: " + verticalInput);
+        Debug.Log("horizontalInput: " + horizontalInput);
+        Debug.Log("Move: " + move);
 
         // Move the character
         if (move.magnitude > 0.1f)
@@ -50,5 +53,16 @@ public class PlayerController : MonoBehaviour
             float speed = move.magnitude;
             animator.SetFloat("Speed", speed > 0.1f ? 1f : 0f);
         }
+    }
+
+    protected virtual void FixedUpdate(){}
+
+    public void CreateCamera(GameObject cameraPrefab){
+        // Create camera and assign player
+        GameObject createdCamera = Instantiate(cameraPrefab);
+        CameraFollow camScript = createdCamera.GetComponent<CameraFollow>();
+        camScript.player = transform;
+
+        cam = createdCamera.transform;
     }
 }
