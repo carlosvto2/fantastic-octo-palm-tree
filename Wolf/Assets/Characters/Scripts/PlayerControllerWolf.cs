@@ -10,10 +10,8 @@ public class PlayerControllerWolf : PlayerController
 
     protected override void Start()
     {
+        base.Start();
         rb = GetComponent<Rigidbody>();
-
-        // Try to find an Animator in children
-        animator = GetComponentInChildren<Animator>();
     }
 
     protected override void Update()
