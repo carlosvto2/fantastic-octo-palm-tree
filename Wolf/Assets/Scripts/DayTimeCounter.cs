@@ -8,7 +8,8 @@ public class DayTimeCounter : MonoBehaviour
     public TextMeshProUGUI Cont;
     private DayNightCicle dayNightCicle = new DayNightCicle();
     public float TotalHour;
-
+    public float limitHour=19;
+    public Color adviceColor= Color.red;
     string FormatTime = "";
     public void Start()
     {
@@ -19,6 +20,11 @@ public class DayTimeCounter : MonoBehaviour
     private void Update()
     {
         TotalHour = dayNightCicle.Hour;
+        if (TotalHour >= limitHour|| TotalHour<6){
+            Cont.color = adviceColor;
+        }else{
+            Cont.color= Color.green;
+        }
         dayTime(TotalHour);
 
     }

@@ -1117,6 +1117,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cont: {fileID: 1873083463}
+  TotalHour: 0
+  limitHour: 19
+  adviceColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &1043383174
 MonoBehaviour:
   m_ObjectHideFlags: 0
