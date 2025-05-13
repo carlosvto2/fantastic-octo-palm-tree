@@ -1045,10 +1045,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cont: {fileID: 1873083463}
-  minutes: 0
-  seconds: 0
-  adviceColor: {r: 0.9245283, g: 0.10291912, b: 0.30319348, a: 0}
-  limitMinutes: 17
 --- !u!114 &1043383174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1535,8 +1531,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hour: 12
+  Minutes: 0
   Sun: {fileID: 1780820662}
-  DayDurationInMinutes: 1
+  DayDurationInMinutes: 24
 --- !u!4 &1796625774
 Transform:
   m_ObjectHideFlags: 0
@@ -1686,7 +1683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -47.900024, y: -77.70001}
+  m_AnchoredPosition: {x: -47.899902, y: -77.69995}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1879146900
