@@ -1,22 +1,30 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class DayNightCicle : MonoBehaviour
 {
     [Range(0.0f, 24f)] public float Hour = 12;
+    [Range(0.0f, 60f)] public float Minutes = 0;
+    
     public Transform Sun;//DirectionalLight
     [SerializeField] public float DayDurationInMinutes = 1;//the norman duration normaly is 24 minutes
     private float SunX;// x position of DirectionalLight
+    
 
     void Update()
     {
+
         Hour += Time.deltaTime * (24 / (60 * DayDurationInMinutes));
+       
+        
         if (Hour >= 24)
         {
             Hour = 0;
         }
+        
         sunRotation();
 
     }
@@ -35,5 +43,6 @@ public class DayNightCicle : MonoBehaviour
         }
 
     }
+    
 }
 

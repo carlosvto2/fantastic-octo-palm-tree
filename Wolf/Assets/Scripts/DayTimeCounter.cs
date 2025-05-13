@@ -5,35 +5,32 @@ using UnityEngine;
 using UnityEngine.UI;
 public class DayTimeCounter : MonoBehaviour
 {
-   public TextMeshProUGUI Cont;
-   public int minutes;
-   public float seconds;
-   public Color adviceColor;
-   public int limitMinutes;
-    private void Start()
+    public TextMeshProUGUI Cont;
+    private DayNightCicle dayNightCicle = new DayNightCicle();
+    public float TotalHour;
+
+    string FormatTime = "";
+    public void Start()
     {
-        ContUpdate();
-    }
-    private void Update()
-    {
-        seconds += Time.deltaTime;
-        if (seconds>= 60){
-            seconds=0;
-            minutes+=1;
-        }
-        ContUpdate();
-        if (minutes>= limitMinutes){
-            Cont.color = adviceColor;
-        }
+        dayNightCicle = GameObject.Find("DayNightCicle").GetComponent<DayNightCicle>();
 
     }
-    public void ContUpdate(){
-        if(seconds>9.5f){
-            Cont.text=minutes.ToString()+":0"+seconds.ToString("f0");
-        }
-        else{
-            Cont.text=minutes.ToString()+":"+seconds.ToString("f0");
-        }
-        
+
+    private void Update()
+    {
+        TotalHour = dayNightCicle.Hour;
+        dayTime(TotalHour);
+
     }
+    public void dayTime(float Hour)
+    {
+        int hourFormat = Mathf.FloorToInt(Hour);
+        int minutes = Mathf.RoundToInt((Hour - hourFormat) * 60);
+
+        FormatTime = string.Format("{0:D2}:{1:D2}", hourFormat, minutes);
+        Cont.text = FormatTime;
+
+    }
+
+
 }
