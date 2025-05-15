@@ -1,42 +1,68 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+
 public class DayTimeCounter : MonoBehaviour
 {
     public TextMeshProUGUI Cont;
-    private DayNightCicle dayNightCicle = new DayNightCicle();
-    public float TotalHour;
-    public float limitHour=19;
-    public Color adviceColor= Color.red;
-    string FormatTime = "";
-    public void Start()
-    {
-        dayNightCicle = GameObject.Find("DayNightCicle").GetComponent<DayNightCicle>();
+    private DayNightCicle dayNightCicle;
 
+    public float startDangerHour = 19f; // Hour when wolf time starts (7 PM)
+    public float endDangerHour = 6f;    // Hour when wolf time ends (6 AM)
+
+    public Color dangerColor = Color.red;
+    public Color safeColor = Color.green;
+
+    private void Start()
+    {
+        
+        dayNightCicle = GameObject.Find("DayNightCicle").GetComponent<DayNightCicle>();
     }
 
     private void Update()
     {
-        TotalHour = dayNightCicle.Hour;
-        if (TotalHour >= limitHour|| TotalHour<6){
-            Cont.color = adviceColor;
-        }else{
-            Cont.color= Color.green;
+        if (dayNightCicle == null) return;
+
+        float currentHour = dayNightCicle.Hour;
+
+        if (IsInDangerZone(currentHour))
+        {
+            // During danger time (from 19:00 to 6:00) – show countdown to 6:00 AM
+            Cont.color = dangerColor;
+            ShowCountdownTo(endDangerHour, currentHour);
         }
-        dayTime(TotalHour);
-
+        else
+        {
+            // During safe time (from 6:00 to 19:00) – show countdown to 7:00 PM
+            Cont.color = safeColor;
+            ShowCountdownTo(startDangerHour, currentHour);
+        }
     }
-    public void dayTime(float Hour)
+
+    
+    private bool IsInDangerZone(float hour)
     {
-        int hourFormat = Mathf.FloorToInt(Hour);
-        int minutes = Mathf.RoundToInt((Hour - hourFormat) * 60);
-
-        FormatTime = string.Format("{0:D2}:{1:D2}", hourFormat, minutes);
-        Cont.text = FormatTime;
-
+        return hour >= startDangerHour || hour < endDangerHour;
     }
 
+  
+    private void ShowCountdownTo(float targetHour, float currentHour)
+    {
+        float remainingHours;
 
+        if (currentHour <= targetHour)
+        {
+            
+            remainingHours = targetHour - currentHour;
+        }
+        else
+        {
+            
+            remainingHours = (24f - currentHour) + targetHour;
+        }
+
+        int hours = Mathf.FloorToInt(remainingHours);
+        int minutes = Mathf.FloorToInt((remainingHours - hours) * 60);
+
+        Cont.text = string.Format("{0:00}:{1:00}", hours, minutes);
+    }
 }
