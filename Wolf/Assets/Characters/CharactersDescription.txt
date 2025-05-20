@@ -1,0 +1,62 @@
+Personajes que si o si deben implementarse (el juego de mesa es de 8 a 18 jugadores)
+----------------------------------------------------------------------------------
+_Los Hombres Lobo Comunes_________________________________________________________
+
+Cada noche devoran a un aldeano.
+- Hay 4 Hombres Lobo Comunes en total.(para muchos jugadores )
+Objetivo: Matar al resto de habitantes de la aldea.
+
+_El Aldeano Común__________________________________________________________________
+
+No tiene ninguna habilidad especial.
+- Hay 9 Aldeanos Comunes en total.
+Objetivo: Matar a todos los Hombres Lobo.
+(hay un aldeano-aldeano en el juego de mesa que todos saben que el si o si es aldeano)
+
+_La Vidente________________________________________________________________________
+
+Cada noche despierta y puede ver la carta de algún jugador.
+(ver si un jugador es el lobo o un aldeano etc)
+Objetivo: Matar a todos los Hombres Lobo.
+
+_El Cazador__________________________________________________________________________
+
+Si muere debe elegir otro jugador al que disparará y morirá.
+- Si el Cazador es el enamorado de un jugador eliminado, también deberá disparar.(esto si esta cupido)
+Objetivo: Matar a todos los Hombres Lobo.
+
+
+
+
+-------OPCIONALES---------------------------------------------------------------------
+
+_La Bruja____________________________________________________________________________
+
+Despierta todas las noches. 
+Puede darle a un jugador una poción curativa, que le resucita; o una poción venenosa, que lo mata.
+- Sólo puede usar cada poción una vez por partida. 
+- Se puede resucitar a sí misma.
+Objetivo: Matar a todos los Hombres Lobo.
+
+_Cupido_______________________________________________________________________________
+
+Despierta la primera noche y designa a 2 jugadores, los cuales quedarán enamorados durante toda la partida.
+- Puede designarse a sí mismo. 
+- Si uno de los enamorados muere, el otro también muere automáticamente. 
+- Un enamorado nunca puede votar en contra de su pareja (ni siquiera para despistar).
+- Si uno de los enamorados es un Aldeano y el otro un Hombre Lobo o el Flautista, el objetivo para ambos cambia. Ahora deberán eliminar a los demás jugadores para ganar.
+Objetivo: Matar a todos los Hombres Lobo.
+
+_El Anciano______________________________________________________________________________ VERY INTERESANTE
+
+Los Hombres Lobo deben atacarle 2 veces para matarlo. La primera vez que es atacado, no muere y no se muestra su carta.
+- El linchamiento popular, el disparo del Cazador o la navaja del Barbero matan al anciano al primer intento. Pero si esto sucede, todos los aldeanos pierden sus poderes especiales hasta el final de la partida. 
+- No le afecta la infección del Infecto Padre de todos los Lobos si es la primera vez que le muerden.
+- Si el anciano es curado por la Bruja, sólo recupera una de sus vidas.
+Objetivo: Matar a todos los Hombres Lobo.
+
+_El Niño Salvaje__________________________________________________________________________________________
+
+El Niño Salvaje es al principio un Aldeano. Durante la primera noche elegirá un jugador. Si ese jugador muere, el Niño Salvaje se transformará en Hombre Lobo hasta el final de la partida. Mientras el jugador siga vivo actuará como Aldeano.
+- Da igual qué tipo de personaje sea el jugador elegido.
+Objetivo: Cumplir el objetivo de su personaje.
