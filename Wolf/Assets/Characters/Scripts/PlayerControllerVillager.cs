@@ -11,7 +11,10 @@ public class PlayerControllerVillager : PlayerController
         controller = GetComponent<CharacterController>();
     }
     
-    protected override void Update(){
+    protected override void Update()
+    {
+        if(cam == null || !IsOwner) return;
+
         // Read input
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
@@ -28,10 +31,6 @@ public class PlayerControllerVillager : PlayerController
 
         // Combine input with camera direction
         Vector3 move = camForward * verticalInput + camRight * horizontalInput;
-
-        Debug.Log("verticalInput: " + verticalInput);
-        Debug.Log("horizontalInput: " + horizontalInput);
-        Debug.Log("Move: " + move);
 
         // Move the character
         if (move.magnitude > 0.1f)
