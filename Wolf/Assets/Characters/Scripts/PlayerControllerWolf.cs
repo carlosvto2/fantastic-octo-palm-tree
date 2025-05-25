@@ -16,8 +16,7 @@ public class PlayerControllerWolf : PlayerController
 
     protected override void Update()
     {
-        if(cam == null)
-            return;
+        if(cam == null || !IsOwner) return;
 
         // Read input
         float horizontal = Input.GetAxisRaw("Horizontal");

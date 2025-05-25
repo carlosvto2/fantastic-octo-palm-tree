@@ -33,4 +33,9 @@ public class CameraFollow : MonoBehaviour
         transform.position = desiredPosition;
         transform.LookAt(player.position + Vector3.up * 1.5f); // Mira al centro del cuerpo
     }
+
+    public void SetTarget(Transform PlayerLocation)
+    {
+        player = PlayerLocation;
+    }
 }
