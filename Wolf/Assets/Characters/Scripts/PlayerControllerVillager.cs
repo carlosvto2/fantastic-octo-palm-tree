@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControllerVillager : PlayerController
 {
@@ -35,7 +36,7 @@ public class PlayerControllerVillager : PlayerController
         //Debug.Log("verticalInput: " + verticalInput);
         //Debug.Log("horizontalInput: " + horizontalInput);
         //Debug.Log("Move: " + move);
-
+       
         // Move the character
         if (move.magnitude > 0.1f)
         {

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 432398b0382988d429ba8355f1700376
+=======
+guid: 4c3728e02aebfa542a461f5274b5aeba
+>>>>>>> de1670d (Intento de multijugador)
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11400000
