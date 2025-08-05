@@ -14,7 +14,7 @@ public class PlayerControllerVillager : PlayerController
     
     protected override void Update()
     {
-        if(cam == null || !IsOwner) return;
+        if (cam == null || !IsOwner) return;
 
         // Read input
         float horizontalInput = Input.GetAxisRaw("Horizontal");

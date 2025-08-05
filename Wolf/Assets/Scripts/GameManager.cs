@@ -27,6 +27,5 @@ public class GameManager : MonoBehaviour
         // Instantiate the chosen character and create his camera
         GameObject ChosenCharacter = Instantiate(chosenPrefab, spawnPoint.position, spawnPoint.rotation);
         PlayerController CharacterScript = ChosenCharacter.GetComponent<PlayerController>();
-        // CharacterScript.CreateCamera(cameraPrefab);
     }
 }
