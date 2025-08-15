@@ -1,42 +1,25 @@
 using Unity.Netcode;
-using UnityEngine;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine;
 
 public class NetworkStarter : MonoBehaviour
 {
     public GameObject wolfPrefab;
     public GameObject villagerPrefab;
-
     public Transform spawnPoint;
 
-    void OnGUI()
-    {
-        // Show buttons if no server or client
-        if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
-        {
-            if (GUI.Button(new Rect(10, 10, 150, 30), "Start Host"))
-            {
-                NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("0.0.0.0", 7777);
-                // Initiate host mode
-                NetworkManager.Singleton.StartHost();
-            }
-            if (GUI.Button(new Rect(10, 50, 150, 30), "Start Client"))
-            {
-                NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("192.168.2.40", 7777);
-                // Initiate client mode
-                Debug.Log("test");
-                NetworkManager.Singleton.StartClient();
-            }
-        }
-    }
+    public GameObject uiPanel; // Panel con los botones (Canvas UI)
 
-    void Start()
+    private void Start()
     {
-        // Subscribes a function to the event that is triggered when a client connects (including the local Host)
+        // Ocultamos botones al inicio
+        if (uiPanel != null)
+            uiPanel.SetActive(false);
+
+        // Evento cuando un cliente se conecta (incluye el host local)
         NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
         {
-            Debug.Log(id);
-            // Verify the function is executed from server side
+            Debug.Log($"Cliente conectado: {id}");
             if (NetworkManager.Singleton.IsServer)
             {
                 SpawnCharacter(id);
@@ -44,16 +27,41 @@ public class NetworkStarter : MonoBehaviour
         };
     }
 
-    void SpawnCharacter(ulong clientId)
+    private void Update()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            bool shouldShow = !NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer;
+            if (uiPanel != null)
+                uiPanel.SetActive(shouldShow);
+        }
+        else
+        {
+            if (uiPanel != null)
+                uiPanel.SetActive(false);
+        }
+    }
+
+    public void StartHost()
+    {
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("0.0.0.0", 7777);
+        NetworkManager.Singleton.StartHost();
+    }
+
+    public void StartClient()
+    {
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("192.168.2.40", 7777);
+        NetworkManager.Singleton.StartClient();
+    }
+
+    private void SpawnCharacter(ulong clientId)
     {
         GameObject prefabToSpawn = Random.value > 0.5f ? wolfPrefab : villagerPrefab;
-
         Vector3 offset = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f));
         Vector3 spawnPos = spawnPoint.position + offset;
+
         GameObject characterInstance = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
         NetworkObject netObj = characterInstance.GetComponent<NetworkObject>();
-
-        // Spawn the character for the corresponding client
         netObj.SpawnAsPlayerObject(clientId, true);
     }
 }
