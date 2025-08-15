@@ -24,6 +24,7 @@ public class NetworkStarter : MonoBehaviour
             {
                 NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("192.168.2.40", 7777);
                 // Initiate client mode
+                Debug.Log("test");
                 NetworkManager.Singleton.StartClient();
             }
         }
@@ -34,6 +35,7 @@ public class NetworkStarter : MonoBehaviour
         // Subscribes a function to the event that is triggered when a client connects (including the local Host)
         NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
         {
+            Debug.Log(id);
             // Verify the function is executed from server side
             if (NetworkManager.Singleton.IsServer)
             {
