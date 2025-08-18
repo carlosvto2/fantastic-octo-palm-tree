@@ -8,18 +8,18 @@ public class NetworkStarter : MonoBehaviour
     public GameObject villagerPrefab;
     public Transform spawnPoint;
 
-    public GameObject uiPanel; // Panel con los botones (Canvas UI)
+    public GameObject uiPanel; // Panel with the botons (Canvas UI)
 
     private void Start()
     {
-        // Ocultamos botones al inicio
+        // Hide the bottons
         if (uiPanel != null)
             uiPanel.SetActive(false);
 
-        // Evento cuando un cliente se conecta (incluye el host local)
+        // Event when the client connects (even the local host)
         NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
         {
-            Debug.Log($"Cliente conectado: {id}");
+            // Debug.Log($"Cliente conectado: {id}");
             if (NetworkManager.Singleton.IsServer)
             {
                 SpawnCharacter(id);
@@ -50,7 +50,7 @@ public class NetworkStarter : MonoBehaviour
 
     public void StartClient()
     {
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("192.168.2.40", 7777);
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("127.0.0.1", 7777);
         NetworkManager.Singleton.StartClient();
     }
 

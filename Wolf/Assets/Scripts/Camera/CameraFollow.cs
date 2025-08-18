@@ -7,9 +7,8 @@ public class CameraFollow : MonoBehaviour
     public float height = 2f;
     public float rotationSpeed = 5f;
 
-    public float minHeightAngle = 5f;
+    public float minHeightAngle = -75f;
     public float maxHeightAngle = 75f;
-
     private float currentX = 0f;
     private float currentY = 15f;
 
