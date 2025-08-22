@@ -8,7 +8,7 @@ public class RoleUI : MonoBehaviour
 
     private void Awake()
     {
-        Canvas canvas = FindObjectOfType<Canvas>();
+        Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas != null)
         {
             roleText = canvas.transform.Find("RoleText")?.GetComponent<TextMeshProUGUI>();

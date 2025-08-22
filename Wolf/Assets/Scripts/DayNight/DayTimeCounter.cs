@@ -3,15 +3,18 @@ using UnityEngine;
 
 public class DayTimeCounter : MonoBehaviour
 {
+    private NetworkStarter NetworkStarter;
     private TextMeshProUGUI Cont;
     private DayNightCicle dayNightCicle;
 
     public Color dangerColor = Color.red;
     public Color safeColor = Color.green;
 
+    private bool IsNight = false;
+
     private void Awake()
     {
-        Canvas canvas = FindObjectOfType<Canvas>();
+        Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas != null)
         {
             Cont = GameObject.Find("TimeText").GetComponent<TextMeshProUGUI>();
@@ -20,6 +23,9 @@ public class DayTimeCounter : MonoBehaviour
 
     private void Start()
     {
+        // Get the network starter of the scene
+        NetworkStarter = FindFirstObjectByType<NetworkStarter>();
+
         dayNightCicle = GetComponent<DayNightCicle>();
     }
 
@@ -41,7 +47,15 @@ public class DayTimeCounter : MonoBehaviour
 
     private bool IsInDangerZone(float hour)
     {
-        return hour >= dayNightCicle.startDangerHour || hour < dayNightCicle.endDangerHour;
+        bool IsDangerous = hour >= dayNightCicle.startDangerHour || hour < dayNightCicle.endDangerHour;
+
+        // If the day/night changed, inform the NetworkStarter it changed
+        if (IsDangerous != IsNight)
+        {
+            IsNight = IsDangerous;
+            NetworkStarter.RaiseDayNightChanged(IsNight);
+        }
+        return IsDangerous;
     }
 
     private void ShowCountdownTo(float targetHour, float currentHour)

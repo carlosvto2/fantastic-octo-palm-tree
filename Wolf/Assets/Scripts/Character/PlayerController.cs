@@ -26,14 +26,14 @@ public abstract class PlayerController : NetworkBehaviour
         {
             CreateCamera();
             PlayerRole.OnValueChanged += OnRoleChanged;
-             // initialize the default value
+            // initialize the default value
             OnRoleChanged(Role.Villager, PlayerRole.Value);
         }
     }
 
     protected virtual void OnRoleChanged(Role oldRole, Role newRole)
     {
-        FindObjectOfType<RoleUI>().ShowRole(newRole.ToString());
+        FindFirstObjectByType<RoleUI>().ShowRole(newRole.ToString());
     }
 
     protected virtual void Update() { }
@@ -49,5 +49,10 @@ public abstract class PlayerController : NetworkBehaviour
 
         // Puedes hacer que siga al jugador, por ejemplo:
         cam.GetComponent<CameraFollow>().SetTarget(transform);
+    }
+    
+    public void SetWolf(bool isWolf)
+    {
+        PlayerRole.Value = isWolf ? Role.Wolf : Role.Villager;
     }
 }
