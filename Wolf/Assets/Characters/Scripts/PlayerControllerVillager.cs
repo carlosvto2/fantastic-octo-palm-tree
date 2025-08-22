@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControllerVillager : PlayerController
 {
@@ -13,7 +14,7 @@ public class PlayerControllerVillager : PlayerController
     
     protected override void Update()
     {
-        if(cam == null || !IsOwner) return;
+        if (cam == null || !IsOwner) return;
 
         // Read input
         float horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -32,6 +33,10 @@ public class PlayerControllerVillager : PlayerController
         // Combine input with camera direction
         Vector3 move = camForward * verticalInput + camRight * horizontalInput;
 
+        //Debug.Log("verticalInput: " + verticalInput);
+        //Debug.Log("horizontalInput: " + horizontalInput);
+        //Debug.Log("Move: " + move);
+       
         // Move the character
         if (move.magnitude > 0.1f)
         {

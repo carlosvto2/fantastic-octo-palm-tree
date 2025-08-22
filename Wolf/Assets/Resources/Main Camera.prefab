@@ -153,5 +153,5 @@ MonoBehaviour:
   player: {fileID: 0}
   height: 2
   rotationSpeed: 5
-  minHeightAngle: 5
+  minHeightAngle: -20
   maxHeightAngle: 60

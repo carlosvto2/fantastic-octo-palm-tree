@@ -7,7 +7,7 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/Village.unity
-    guid: 47f808350e255954db89d967092d5b15
+    guid: b93ff6676e920994e8b1842908c57faf
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
