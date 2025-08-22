@@ -1604,9 +1604,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 718209098848908691, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 659.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1912104628084786309, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
       propertyPath: m_Name
-      value: TimeCanvas
+      value: PlayerCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3599679304053649857, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7037909833517669369, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7650609617677885384, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
       propertyPath: m_Pivot.x
@@ -1687,6 +1699,10 @@ PrefabInstance:
     - target: {fileID: 7650609617677885384, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8136393275424008336, guid: fb8d1b70cf7f59b4188da4689d21d51b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1820,7 +1836,7 @@ PrefabInstance:
       objectReference: {fileID: 1939695334}
     - target: {fileID: 5824288994725722623, guid: fe16b64cdc484de4991c27e9b4300738, type: 3}
       propertyPath: LogLevel
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

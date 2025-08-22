@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class NetworkStarter : MonoBehaviour
 {
@@ -9,6 +10,12 @@ public class NetworkStarter : MonoBehaviour
     public Transform spawnPoint;
 
     public GameObject uiPanel; // Panel with the botons (Canvas UI)
+    public int MinimumNumberOfPlayers = 2;
+    private List<ulong> connectedClients = new List<ulong>();
+
+    // ROLES
+    private bool rolesAssigned = false;
+
 
     private void Start()
     {
@@ -22,7 +29,15 @@ public class NetworkStarter : MonoBehaviour
             // Debug.Log($"Cliente conectado: {id}");
             if (NetworkManager.Singleton.IsServer)
             {
-                SpawnCharacter(id);
+                // add client to the connected clients
+                connectedClients.Add(id);
+
+                // Execute when all player connected
+                if (connectedClients.Count == MinimumNumberOfPlayers && !rolesAssigned)
+                {
+                    AssignRolesAndSpawn();
+                    rolesAssigned = true;
+                }
             }
         };
     }
@@ -54,14 +69,38 @@ public class NetworkStarter : MonoBehaviour
         NetworkManager.Singleton.StartClient();
     }
 
-    private void SpawnCharacter(ulong clientId)
+    private void AssignRolesAndSpawn()
     {
-        GameObject prefabToSpawn = Random.value > 0.5f ? wolfPrefab : villagerPrefab;
+        // Choose randomly the roles
+        int wolfIndex = Random.Range(0, connectedClients.Count);
+        ulong wolfId = connectedClients[wolfIndex];
+
+        for (int i = 0; i < connectedClients.Count; i++)
+        {
+            ulong clientId = connectedClients[i];
+            bool isWolf = clientId == wolfId;
+            SpawnCharacter(clientId, isWolf);
+        }
+    }
+
+    private void SpawnCharacter(ulong clientId, bool isWolf)
+    {
+        Role assignedRole = isWolf ? Role.Wolf : Role.Villager;
+
+        GameObject prefabToSpawn = assignedRole == Role.Wolf ? wolfPrefab : villagerPrefab;
+
         Vector3 offset = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f));
         Vector3 spawnPos = spawnPoint.position + offset;
 
         GameObject characterInstance = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
         NetworkObject netObj = characterInstance.GetComponent<NetworkObject>();
         netObj.SpawnAsPlayerObject(clientId, true);
+        
+
+        var PlayerController = characterInstance.GetComponent<PlayerController>();
+        if (PlayerController != null)
+        {
+            PlayerController.PlayerRole.Value = assignedRole;
+        }
     }
 }

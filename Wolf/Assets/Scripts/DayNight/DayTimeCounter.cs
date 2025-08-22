@@ -11,8 +11,11 @@ public class DayTimeCounter : MonoBehaviour
 
     private void Awake()
     {
-        if (Cont == null)
+        Canvas canvas = FindObjectOfType<Canvas>();
+        if (canvas != null)
+        {
             Cont = GameObject.Find("TimeText").GetComponent<TextMeshProUGUI>();
+        }
     }
 
     private void Start()
