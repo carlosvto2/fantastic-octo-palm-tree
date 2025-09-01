@@ -4,10 +4,20 @@ using UnityEngine;
 
 public class RoleUI : MonoBehaviour
 {
+    public static RoleUI Instance;   // 🔑 Singleton accesible globally
     private TextMeshProUGUI roleText;
 
     private void Awake()
     {
+        // Configure Singleton
+        if (Instance == null) 
+            Instance = this;
+        else
+        {
+            return;
+        }
+
+        // Search the Roletext inside of the canvas
         Canvas canvas = FindFirstObjectByType<Canvas>();
         if (canvas != null)
         {
@@ -20,11 +30,11 @@ public class RoleUI : MonoBehaviour
     public void ShowRole(string role)
     {
         if (!roleText) return;
+
         roleText.gameObject.SetActive(true);
         roleText.text = $"You are a {role}";
 
-        // Hide Role after some time
-        StartCoroutine(HideRoleAfterDelay(2f));
+        StartCoroutine(HideRoleAfterDelay(5f));
     }
 
     private IEnumerator HideRoleAfterDelay(float delay)

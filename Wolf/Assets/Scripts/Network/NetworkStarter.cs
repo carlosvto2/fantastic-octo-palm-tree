@@ -5,8 +5,7 @@ using System.Collections.Generic;
 
 public class NetworkStarter : MonoBehaviour
 {
-    public GameObject villagerPrefab;
-    public GameObject wolfPrefab;
+    public GameObject playerPrefab;
     public Transform spawnPoint;
 
     public GameObject uiPanel; // Panel with the botons (Canvas UI)
@@ -72,6 +71,14 @@ public class NetworkStarter : MonoBehaviour
         NetworkManager.Singleton.StartClient();
     }
 
+    public void RaiseDayNightChanged(bool transformToWolf)
+    {
+        // Only if server Invoke the wolves transformation
+        if (!NetworkManager.Singleton.IsServer) return;
+        OnDayNightChanged?.Invoke(transformToWolf);
+    }
+    
+
     private void AssignRolesAndSpawn()
     {
         // Choose randomly the roles
@@ -82,17 +89,24 @@ public class NetworkStarter : MonoBehaviour
         {
             ulong clientId = connectedClients[i];
             bool isWolf = clientId == wolfId;
-            if (isWolf) WolvesClients.Add(clientId); // save the id of the wolf
-            SpawnCharacter(clientId, isWolf);
+            if (isWolf)
+            {
+                WolvesClients.Add(clientId); // save the id of the wolf
+                SpawnCharacter(clientId, RoleName.Wolf);
+            }
+            else
+            {
+                SpawnCharacter(clientId, RoleName.Villager);
+            }
         }
     }
 
-    private void SpawnCharacter(ulong clientId, bool isWolf)
+    private void SpawnCharacter(ulong clientId, RoleName Role)
     {
         Vector3 offset = new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f));
         Vector3 spawnPos = spawnPoint.position + offset;
 
-        GameObject characterInstance = Instantiate(villagerPrefab, spawnPos, Quaternion.identity);
+        GameObject characterInstance = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
         NetworkObject netObj = characterInstance.GetComponent<NetworkObject>();
         netObj.SpawnAsPlayerObject(clientId, true);
 
@@ -100,15 +114,15 @@ public class NetworkStarter : MonoBehaviour
         var PlayerController = characterInstance.GetComponent<PlayerController>();
         if (PlayerController != null)
         {
-            PlayerController.PlayerRole.Value = isWolf ? Role.Wolf : Role.Villager;
+            var rpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new[] { clientId } // 👈 send only to the correct client
+                }
+            };
+            PlayerController.ShowRoleScreenClientRpc(Role, rpcParams);
         }
-    }
-
-    public void RaiseDayNightChanged(bool transformToWolf)
-    {
-        // Only if server Invoke the wolves transformation
-        if (!NetworkManager.Singleton.IsServer) return;
-        OnDayNightChanged?.Invoke(transformToWolf);
     }
 
     // Transform the wolves
@@ -121,22 +135,12 @@ public class NetworkStarter : MonoBehaviour
             if (playerObj != null)
             {
                 // Transform the player
-                TransformPlayer(playerObj, TransformToWolf);
+                var PlayerController = playerObj.GetComponent<PlayerController>();
+                if (PlayerController != null)
+                {
+                    PlayerController.SetRole(RoleName.Wolf);
+                }
             }
         }
-    }
-
-    public void TransformPlayer(NetworkObject oldPlayerObj, bool toWolf)
-    {
-        ulong clientId = oldPlayerObj.OwnerClientId; // Get clent id
-        Vector3 pos = oldPlayerObj.transform.position;
-        Quaternion rot = oldPlayerObj.transform.rotation;
-
-        oldPlayerObj.Despawn(true); // destroy gameobject in all clients
-
-        GameObject prefab = toWolf ? wolfPrefab : villagerPrefab;
-        GameObject newCharacter = Instantiate(prefab, pos, rot);
-        NetworkObject netObj = newCharacter.GetComponent<NetworkObject>();
-        netObj.SpawnAsPlayerObject(clientId, true);
     }
 }
