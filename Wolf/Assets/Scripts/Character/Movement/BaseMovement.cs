@@ -1,20 +1,31 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 
-[RequireComponent(typeof(CharacterController))]
 public class BaseMovement : NetworkBehaviour
 {
     public float moveSpeed = 5f;
     public CharacterController controller;
+    protected Animator animator;
+    private NetworkAnimator netAnim;
+    public bool IsAttacking = false;
+    protected NetworkObject parentNetObj;
 
     // NetworkVariable solo para lectura por los clientes
     public NetworkVariable<Quaternion> ModelRotation = new NetworkVariable<Quaternion>(
         writePerm: NetworkVariableWritePermission.Server
     );
 
-    public void Move(Vector3 input, Transform cam, Animator animator)
+    protected void Start()
     {
-        if (cam == null) return;
+        animator = GetComponent<Animator>();
+        netAnim = GetComponent<NetworkAnimator>();
+        parentNetObj = transform.parent?.GetComponent<NetworkObject>();
+    }
+
+    public void Move(Vector3 input, Transform cam)
+    {
+        if (cam == null || IsAttacking) return;
         if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
             return;
 
@@ -35,26 +46,25 @@ public class BaseMovement : NetworkBehaviour
             NetworkObject rootNetObj = GetComponentInParent<NetworkObject>();
             if (rootNetObj.IsOwner)
             {
-                // apply movement to the root, not to the model
-                root.position += move.normalized * moveSpeed * Time.deltaTime;
+                Vector3 motion = move.normalized * moveSpeed * Time.deltaTime;
+                controller.Move(motion);
 
-                // rotation for the root
-                Quaternion targetRotation = Quaternion.LookRotation(move);
-                root.rotation = Quaternion.Slerp(root.rotation, targetRotation, Time.deltaTime * 20f);
-
-                // send the rotation to apply for the root to the server
-                if (IsOwner)
+                // rotación
+                if (motion != Vector3.zero)
                 {
+                    Quaternion targetRotation = Quaternion.LookRotation(move);
+                    root.rotation = Quaternion.Slerp(root.rotation, targetRotation, Time.deltaTime * 20f);
                     UpdateRotationServerRpc(targetRotation);
                 }
             }
             else
             {
-                // non owner client apply the received rotation
                 root.rotation = ModelRotation.Value;
             }
         }
-        if (animator != null)
+            
+            
+        if (animator != null && parentNetObj.IsOwner)
         {
             float speed = move.magnitude;
             animator.SetFloat("Speed", speed > 0.1f ? 1f : 0f);
@@ -62,7 +72,7 @@ public class BaseMovement : NetworkBehaviour
     }
 
     // --- ServerRpc to update the rotation ---
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void UpdateRotationServerRpc(Quaternion rotation)
     {
         ModelRotation.Value = rotation;

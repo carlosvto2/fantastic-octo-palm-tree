@@ -138,7 +138,10 @@ public class NetworkStarter : MonoBehaviour
                 var PlayerController = playerObj.GetComponent<PlayerController>();
                 if (PlayerController != null)
                 {
-                    PlayerController.SetRole(RoleName.Wolf);
+                    if (TransformToWolf)
+                        PlayerController.SetRole(RoleName.Wolf);
+                    else
+                        PlayerController.SetRole(RoleName.Villager);
                 }
             }
         }
