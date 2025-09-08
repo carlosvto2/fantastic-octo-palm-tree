@@ -8,7 +8,9 @@ public class BaseMovement : NetworkBehaviour
     public CharacterController controller;
     protected Animator animator;
     private NetworkAnimator netAnim;
-    public bool IsAttacking = false;
+    public NetworkVariable<bool> IsAttacking = new NetworkVariable<bool>(
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner
+    );
     protected NetworkObject parentNetObj;
 
     // NetworkVariable solo para lectura por los clientes
@@ -25,7 +27,7 @@ public class BaseMovement : NetworkBehaviour
 
     public void Move(Vector3 input, Transform cam)
     {
-        if (cam == null || IsAttacking) return;
+        if (cam == null || IsAttacking.Value) return;
         if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
             return;
 
@@ -62,8 +64,8 @@ public class BaseMovement : NetworkBehaviour
                 root.rotation = ModelRotation.Value;
             }
         }
-            
-            
+
+
         if (animator != null && parentNetObj.IsOwner)
         {
             float speed = move.magnitude;
@@ -76,5 +78,16 @@ public class BaseMovement : NetworkBehaviour
     void UpdateRotationServerRpc(Quaternion rotation)
     {
         ModelRotation.Value = rotation;
+    }
+
+    public void StartAttack()
+    {
+        if (IsOwner)
+            IsAttacking.Value = true;
+    }
+    public void EndAttack()
+    {
+        if (IsOwner)
+            IsAttacking.Value = false;
     }
 }

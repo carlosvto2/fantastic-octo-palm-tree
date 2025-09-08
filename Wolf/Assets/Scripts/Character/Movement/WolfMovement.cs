@@ -12,7 +12,7 @@ public class WolfMovement : BaseMovement
     private void Update()
     {
         HandleAttack();
-        if (IsAttacking)
+        if (IsAttacking.Value)
         {
             // Movement ahead
             Vector3 forward = transform.forward;
@@ -32,7 +32,7 @@ public class WolfMovement : BaseMovement
     private IEnumerator AttackRoutine()
     {
         // set can attack to false for some seconds
-        IsAttacking = true;
+        StartAttack();
         canAttack = false;
         // do the attack animation
         animator.SetTrigger("Attack");

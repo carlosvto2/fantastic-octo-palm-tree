@@ -9,7 +9,7 @@ public class AttackStateBehaviour : StateMachineBehaviour
         WolfMovement wolf = animator.GetComponent<WolfMovement>();
         if (wolf != null)
         {
-            wolf.IsAttacking = false;
+            wolf.EndAttack();
         }
     }
 }
