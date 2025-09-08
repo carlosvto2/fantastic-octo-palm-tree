@@ -5,8 +5,8 @@ public class DayNightCicle : NetworkBehaviour
 {
     // Synced hour from the server
     public NetworkVariable<float> Hour = new NetworkVariable<float>(
-        12f, 
-        NetworkVariableReadPermission.Everyone, 
+        12f,
+        NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server // only the server can modify the value
     );
 

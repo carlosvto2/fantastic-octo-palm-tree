@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf95cc241c0137f45ac44875a9bec634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wolfPrefab: {fileID: 7513399182014296049, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
-  villagerPrefab: {fileID: 1968134238629125728, guid: 4f0ec5e7302a1294395a81f6bf45c1c1, type: 3}
+  playerPrefab: {fileID: 7823387807614413361, guid: 6ae3b4be0a11a0a4d9871ed3e69dcca5, type: 3}
   spawnPoint: {fileID: 0}
+  uiPanel: {fileID: 0}
+  MinimumNumberOfPlayers: 2
