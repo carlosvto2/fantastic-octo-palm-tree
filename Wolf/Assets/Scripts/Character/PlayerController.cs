@@ -32,14 +32,14 @@ public class PlayerController : NetworkBehaviour
         NetworkVariableWritePermission.Server
     );
     private NetworkAnimator networkAnimator;
-    private RoleUI CanvasUI;
+    private RoleUI RoleUI;
     private CharacterController controller;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         controller = GetComponent<CharacterController>();
-        CanvasUI = GetComponent<RoleUI>();
+        RoleUI = GetComponent<RoleUI>();
 
         // Subscribe to NetworkVariable changes on all clients (including Host).
         // We use IsClient instead of IsOwner because we want every client to react
@@ -152,6 +152,6 @@ public class PlayerController : NetworkBehaviour
     [ClientRpc]
     public void ShowRoleScreenClientRpc(RoleName role, ClientRpcParams clientRpcParams = default)
     {
-        RoleUI.Instance?.ShowRole(role.ToString());
+        RoleUI.ShowRole(role.ToString());
     }
 }
