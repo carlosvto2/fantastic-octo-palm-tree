@@ -685,7 +685,7 @@ MonoBehaviour:
   - name: 2
     model: {fileID: 4043880161832225548}
     movement: {fileID: 8479403560091848822}
-    ColliderRadius: 1
+    ColliderRadius: 0.9
   PlayerRole:
     m_InternalValue: 0
 --- !u!114 &7737600079886230632
@@ -765,13 +765,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
+  m_Height: 1.49
   m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1.06, z: 0}
+  m_Center: {x: 0, y: 0.66, z: 0}
 --- !u!114 &-3074330935888970196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -830,6 +830,18 @@ PrefabInstance:
     - target: {fileID: 5069469454915019522, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 2181396862
+      objectReference: {fileID: 0}
+    - target: {fileID: 7137963598581364043, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 7137963598581364043, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 7137963598581364043, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.39
       objectReference: {fileID: 0}
     - target: {fileID: 7137963598581364043, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1023,5 +1035,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  TransitionStateInfoList: []
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 2081823275
+    DestinationState: 646380074
+    TransitionDuration: 0
+    TriggerNameHash: 1293411866
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 1748754976
+    DestinationState: 646380074
+    TransitionDuration: 0
+    TriggerNameHash: 1293411866
+    TransitionIndex: 1
   m_Animator: {fileID: 1289055096790920253}
