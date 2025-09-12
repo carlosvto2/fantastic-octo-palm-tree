@@ -28,7 +28,6 @@ public class NetworkStarter : MonoBehaviour
         // Event when the client connects (even the local host)
         NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
         {
-            // Debug.Log($"Cliente conectado: {id}");
             if (NetworkManager.Singleton.IsServer)
             {
                 // add client to the connected clients

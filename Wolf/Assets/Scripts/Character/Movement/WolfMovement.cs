@@ -6,6 +6,9 @@ public class WolfMovement : BaseMovement
 {
     private bool attack = false;
     private bool canAttack = true;
+    public NetworkVariable<bool> attackDone = new NetworkVariable<bool>(
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+    );
     public int attackCooldown = 2;
     public float attackMoveSpeed = 10f;
 
@@ -32,13 +35,35 @@ public class WolfMovement : BaseMovement
     private IEnumerator AttackRoutine()
     {
         // set can attack to false for some seconds
-        StartAttack();
+        StartAttackServerRpc();
         canAttack = false;
         // do the attack animation
         animator.SetTrigger("Attack");
         yield return new WaitForSeconds(attackCooldown);
         // set to true the "canAttack" boolean after a cooldown
         canAttack = true;
+        AttackDoneServerRpc(false);
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StartAttackServerRpc()
+    {
+        IsAttacking.Value = true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void EndAttackServerRpc()
+    {
+        IsAttacking.Value = false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AttackDoneServerRpc(bool done)
+    {
+        Debug.Log("Set attackdone to true");
+        attackDone.Value = done;
+        Debug.Log("attackDone" + attackDone.Value);
     }
 
 }

@@ -28,12 +28,8 @@ public class DoorInteraction : MonoBehaviour
     {
         if (nearbyVillager != null)
         {
-            // DEBUG opcional
-             //Debug.Log("Villager is nearby");
-
             if (Input.GetKeyDown(KeyCode.E))
             {
-                 //Debug.Log("E pressed");
                 if (currentCoroutine != null) StopCoroutine(currentCoroutine);
                 currentCoroutine = StartCoroutine(ToggleDoor());
             }
@@ -74,7 +70,6 @@ public class DoorInteraction : MonoBehaviour
         if (other.CompareTag("Villager"))
         {
             nearbyVillager = other.gameObject;
-             //Debug.Log("Villager entered trigger: " + other.name);
         }
     }
 
@@ -83,7 +78,6 @@ public class DoorInteraction : MonoBehaviour
         if (other.gameObject == nearbyVillager)
         {
             nearbyVillager = null;
-             //Debug.Log("Villager exited trigger: " + other.name);
         }
     }
 }

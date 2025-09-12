@@ -9,7 +9,7 @@ public class BaseMovement : NetworkBehaviour
     protected Animator animator;
     private NetworkAnimator netAnim;
     public NetworkVariable<bool> IsAttacking = new NetworkVariable<bool>(
-        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
     );
     protected NetworkObject parentNetObj;
 
@@ -78,16 +78,5 @@ public class BaseMovement : NetworkBehaviour
     void UpdateRotationServerRpc(Quaternion rotation)
     {
         ModelRotation.Value = rotation;
-    }
-
-    public void StartAttack()
-    {
-        if (IsOwner)
-            IsAttacking.Value = true;
-    }
-    public void EndAttack()
-    {
-        if (IsOwner)
-            IsAttacking.Value = false;
     }
 }

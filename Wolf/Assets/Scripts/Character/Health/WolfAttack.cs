@@ -6,25 +6,27 @@ public class WolfAttack : NetworkBehaviour
     public int damage = 20;
     public WolfMovement wolfMovement;
     
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!IsServer) return;
 
-            // The wolf must be attacking
-        if (wolfMovement != null && wolfMovement.IsAttacking.Value)
+        // The wolf must be attacking
+        if (wolfMovement != null && wolfMovement.IsAttacking.Value && !wolfMovement.attackDone.Value)
         {
-            // Obtener el NetworkObject raíz del otro
+            wolfMovement.AttackDoneServerRpc(true);
+            // Obtain the root network object
             NetworkObject otherNetObj = other.GetComponentInParent<NetworkObject>();
             NetworkObject myNetObj = wolfMovement.GetComponentInParent<NetworkObject>();
 
-            // Si no hay NetworkObject o es el mismo que yo, lo ignoramos
+            // If the network object is the same, ignore
             if (otherNetObj == null || otherNetObj == myNetObj) return;
 
-            // Buscar Health en el otro
+            // Get the Health component of the other
             Health targetHealth = otherNetObj.GetComponentInParent<Health>();
             if (targetHealth != null)
             {
-                targetHealth.ApplyDamage(damage); // este método solo en servidor
+                targetHealth.ApplyDamage(damage);
+                wolfMovement.EndAttackServerRpc(); // finish the wolf attack
             }
         }
     }

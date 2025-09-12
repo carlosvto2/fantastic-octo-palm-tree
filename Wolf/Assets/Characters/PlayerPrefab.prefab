@@ -815,6 +815,10 @@ PrefabInstance:
       propertyPath: attackMoveSpeed
       value: 16
       objectReference: {fileID: 0}
+    - target: {fileID: 3825324379491000180, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.8983268
+      objectReference: {fileID: 0}
     - target: {fileID: 5069469454915019522, guid: 8f427b1323b96ef408d1acdf18ec9aea, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 1758453722

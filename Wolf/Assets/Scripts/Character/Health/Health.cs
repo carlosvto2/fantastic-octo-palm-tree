@@ -16,7 +16,7 @@ public class Health : NetworkBehaviour
 
     [Header("UI Prefabs")]
     public HealthBar3D worldHealthBarPrefab;
-    
+
     public HealthBar PlayerHealthBar;
     private HealthBar3D worldHealthBarInstance;
     public Transform HealthBarPosition;
@@ -69,9 +69,13 @@ public class Health : NetworkBehaviour
         // Adjust his own players health bar IN OTHER CLIENTS
         if (worldHealthBarInstance)
             worldHealthBarInstance.SetHealth(newValue);
+        
         if (newValue <= 0)
         {
             // Death animation
+            Animator anim = GetAnimatorOfActiveMovement();
+            if (anim)
+                anim.SetTrigger("Dead");
         }
     }
 
@@ -87,6 +91,24 @@ public class Health : NetworkBehaviour
     {
         if (currentHealth.Value <= 0) return;
         currentHealth.Value = Mathf.Min(currentHealth.Value + amount, maxHealth);
+    }
+    
+    public Animator GetAnimatorOfActiveMovement()
+    {
+        BaseMovement[] movements = GetComponentsInChildren<BaseMovement>(true);
+
+        foreach (BaseMovement movement in movements)
+        {
+            if (movement.enabled && movement.gameObject.activeInHierarchy)
+            {
+                // if the movement is enabled, return the animator component of the gameobject
+                Animator anim = movement.GetComponent<Animator>();
+                if (anim != null)
+                    return anim;
+            }
+        }
+
+        return null;
     }
 }
 
