@@ -50,6 +50,10 @@ public class BaseMovement : NetworkBehaviour
             {
                 Vector3 motion = move.normalized * moveSpeed * Time.deltaTime;
                 controller.Move(motion);
+                // Set the Y position always to 0.f
+                Vector3 pos = root.position;
+                pos.y = 0f;
+                root.position = pos;
 
                 // rotación
                 if (motion != Vector3.zero)

@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode;
 
-public class DoorInteraction : MonoBehaviour
+public class DoorInteraction : NetworkBehaviour
 {
     [Tooltip("Ángulo de apertura. Usa negativo si quieres que se abra hacia afuera.")]
     public float openAngle = -90f;
@@ -14,7 +15,6 @@ public class DoorInteraction : MonoBehaviour
     private Quaternion closedRotation;
     private Quaternion openRotation;
     private Coroutine currentCoroutine;
-    private GameObject nearbyVillager = null;
 
     void Start()
     {
@@ -24,25 +24,29 @@ public class DoorInteraction : MonoBehaviour
         SetColliderState(true); // La puerta empieza cerrada
     }
 
-    void Update()
+    [ServerRpc(RequireOwnership = false)]
+    public void ToggleDoorServerRpc(ServerRpcParams rpcParams = default)
     {
-        if (nearbyVillager != null)
-        {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-                currentCoroutine = StartCoroutine(ToggleDoor());
-            }
-        }
+        Debug.Log("hola");
+        if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+        currentCoroutine = StartCoroutine(ToggleDoorRoutine());
+        
+        ToggleDoorClientRpc();
     }
 
-    private IEnumerator ToggleDoor()
+    [ClientRpc]
+    private void ToggleDoorClientRpc() {
+        if (IsServer) return;
+
+        if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+        currentCoroutine = StartCoroutine(ToggleDoorRoutine());
+    }
+
+
+    private IEnumerator ToggleDoorRoutine()
     {
         Quaternion targetRotation = isOpen ? closedRotation : openRotation;
         isOpen = !isOpen;
-
-        // Desactiva el collider mientras se abre para evitar bloqueo
-        SetColliderState(false);
 
         while (Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
         {
@@ -51,33 +55,11 @@ public class DoorInteraction : MonoBehaviour
         }
 
         transform.rotation = targetRotation;
-
-        // Si se ha cerrado, reactiva el collider
-        if (!isOpen)
-        {
-            SetColliderState(true);
-        }
     }
 
     private void SetColliderState(bool active)
     {
         if (solidCollider != null)
             solidCollider.enabled = active;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Villager"))
-        {
-            nearbyVillager = other.gameObject;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == nearbyVillager)
-        {
-            nearbyVillager = null;
-        }
     }
 }

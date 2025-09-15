@@ -983,6 +983,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Villager
       objectReference: {fileID: 0}
+    - target: {fileID: 1968134238629125728, guid: 4f0ec5e7302a1294395a81f6bf45c1c1, type: 3}
+      propertyPath: m_TagString
+      value: Villager
+      objectReference: {fileID: 0}
     - target: {fileID: 4622961527818513040, guid: 4f0ec5e7302a1294395a81f6bf45c1c1, type: 3}
       propertyPath: controller
       value: 

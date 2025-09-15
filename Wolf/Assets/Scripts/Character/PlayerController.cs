@@ -35,6 +35,8 @@ public class PlayerController : NetworkBehaviour
     private RoleUI RoleUI;
     private CharacterController controller;
 
+    private DoorInteraction nearbyDoor;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -67,6 +69,37 @@ public class PlayerController : NetworkBehaviour
         if (currentRole.movement != null)
         {
             currentRole.movement.Move(input, Camera.main.transform);
+        }
+
+        // Check if any door close when the E button is pressed
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (nearbyDoor != null)
+            {
+                nearbyDoor.ToggleDoorServerRpc();
+            }
+        }
+    }
+
+    // ------------------------
+    // Door Interaction
+    // ------------------------
+     private void OnTriggerEnter(Collider other)
+    {
+        // Check if the gameobject has the component DoorInteraction
+        DoorInteraction door = other.GetComponent<DoorInteraction>();
+        if (door != null)
+        {
+            nearbyDoor = door;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        DoorInteraction door = other.GetComponent<DoorInteraction>();
+        if (door != null && door == nearbyDoor)
+        {
+            nearbyDoor = null;
         }
     }
 
@@ -112,6 +145,8 @@ public class PlayerController : NetworkBehaviour
             {
                 currentRole = role;
                 controller.radius = role.ColliderRadius;
+
+                SetTag();
             }
         }
     }
@@ -126,6 +161,14 @@ public class PlayerController : NetworkBehaviour
         }
         else
             SubmitRoleChangeServerRpc(newRole);
+    }
+
+    public void SetTag()
+    {
+        if (currentRole.name == RoleName.Villager)
+            gameObject.tag = "Villager";
+        else
+            gameObject.tag = "Untagged";
     }
 
     [ServerRpc]
