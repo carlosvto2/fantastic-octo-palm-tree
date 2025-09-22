@@ -11,20 +11,26 @@ public class CropPickUp : NetworkBehaviour
         // If the player is close and press E
         if (isPlayerNearby && Input.GetKeyDown(KeyCode.E))
         {
-            CollectServerRpc();
+            // Tell the server, this client wants to pick up the vegetable
+            CollectServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void CollectServerRpc()
+    public void CollectServerRpc(ulong clientId)
     {
-        PickUpCropClientRpc();
+        PickUpCropClientRpc(clientId);
+        Destroy(gameObject);
     }
 
     [ClientRpc]
-    private void PickUpCropClientRpc()
+    private void PickUpCropClientRpc(ulong clientId, ClientRpcParams rpcParams = default)
     {
-        Destroy(gameObject);
+        // Only the client that picked up the vegetable, increases the number
+        if (NetworkManager.Singleton.LocalClientId == clientId && playerController != null)
+        {
+            playerController.IncreaseVegetables(1);
+        }
     }
 
     private void OnTriggerEnter(Collider other)

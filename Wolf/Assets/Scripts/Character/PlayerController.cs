@@ -2,6 +2,7 @@ using UnityEngine;
 using Unity.Netcode;
 using System.Linq;
 using Unity.Netcode.Components;
+using TMPro;
 
 public enum RoleName
 {
@@ -39,11 +40,16 @@ public class PlayerController : NetworkBehaviour
     private DoorInteraction nearbyDoor;
     public GameObject smokeParticlePrefab;
 
+    // Inventory
+    InventoryManager Inventory;
+
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         controller = GetComponent<CharacterController>();
         RoleUI = GetComponent<RoleUI>();
+        Inventory = GetComponent<InventoryManager>();
 
         // Subscribe to NetworkVariable changes on all clients (including Host).
         // We use IsClient instead of IsOwner because we want every client to react
@@ -86,7 +92,7 @@ public class PlayerController : NetworkBehaviour
     // ------------------------
     // Door Interaction
     // ------------------------
-     private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         // Check if the gameobject has the component DoorInteraction
         DoorInteraction door = other.GetComponent<DoorInteraction>();
@@ -166,7 +172,8 @@ public class PlayerController : NetworkBehaviour
     // ------------------------
     public void SetRole(RoleName newRole)
     {
-        if (IsServer) {
+        if (IsServer)
+        {
             PlayerRole.Value = newRole;
         }
         else
@@ -216,5 +223,11 @@ public class PlayerController : NetworkBehaviour
     {
         RoleUI.ShowRole(role.ToString());
         SetGameRole(role);
+    }
+
+    public void IncreaseVegetables(int amount)
+    {
+        if (Inventory)
+            Inventory.IncreaseVegetables(amount);
     }
 }
