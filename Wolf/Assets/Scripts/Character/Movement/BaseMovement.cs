@@ -73,7 +73,7 @@ public class BaseMovement : NetworkBehaviour
         if (animator != null && parentNetObj.IsOwner)
         {
             float speed = move.magnitude;
-            animator.SetFloat("Speed", speed > 0.1f ? 1f : 0f);
+            animator.SetFloat("Speed", speed);
         }
     }
 

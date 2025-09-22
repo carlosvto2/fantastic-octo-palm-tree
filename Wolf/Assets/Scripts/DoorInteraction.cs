@@ -27,7 +27,6 @@ public class DoorInteraction : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ToggleDoorServerRpc(ServerRpcParams rpcParams = default)
     {
-        Debug.Log("hola");
         if (currentCoroutine != null) StopCoroutine(currentCoroutine);
         currentCoroutine = StartCoroutine(ToggleDoorRoutine());
         

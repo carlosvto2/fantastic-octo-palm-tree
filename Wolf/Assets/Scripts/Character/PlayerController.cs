@@ -22,9 +22,10 @@ public class Role
 
 public class PlayerController : NetworkBehaviour
 {
-    protected Transform cam;                  // Reference to the main camera's transform
+    protected Transform cam; // Reference to the main camera's transform
 
     public Role[] roles;
+    public RoleName gameRole; // Role of the game for the player
     private Role currentRole;
     public NetworkVariable<RoleName> PlayerRole = new NetworkVariable<RoleName>(
         RoleName.None,
@@ -36,6 +37,7 @@ public class PlayerController : NetworkBehaviour
     private CharacterController controller;
 
     private DoorInteraction nearbyDoor;
+    public GameObject smokeParticlePrefab;
 
     public override void OnNetworkSpawn()
     {
@@ -124,6 +126,13 @@ public class PlayerController : NetworkBehaviour
             SetRole(roleName);
     }
 
+    public void SetGameRole(RoleName roleName)
+    {
+        // Change the role in the server so that all the clients can see it
+        if (IsOwner)
+            gameRole = roleName;
+    }
+
     void OnRoleChanged(RoleName oldRole, RoleName newRole)
     {
         // Update the visibility in all the clients
@@ -147,6 +156,7 @@ public class PlayerController : NetworkBehaviour
                 controller.radius = role.ColliderRadius;
 
                 SetTag();
+                SpawnSmokeEffect();
             }
         }
     }
@@ -169,6 +179,15 @@ public class PlayerController : NetworkBehaviour
             gameObject.tag = "Villager";
         else
             gameObject.tag = "Untagged";
+    }
+
+    void SpawnSmokeEffect()
+    {
+        Vector3 spawnPos = transform.position;
+        Quaternion randomRot = Random.rotation;
+
+        GameObject particle = Instantiate(smokeParticlePrefab, spawnPos, randomRot);
+        Destroy(particle, 1f);
     }
 
     [ServerRpc]
@@ -196,5 +215,6 @@ public class PlayerController : NetworkBehaviour
     public void ShowRoleScreenClientRpc(RoleName role, ClientRpcParams clientRpcParams = default)
     {
         RoleUI.ShowRole(role.ToString());
+        SetGameRole(role);
     }
 }

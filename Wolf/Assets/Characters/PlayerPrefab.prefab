@@ -688,6 +688,7 @@ MonoBehaviour:
     ColliderRadius: 0.9
   PlayerRole:
     m_InternalValue: 0
+  smokeParticlePrefab: {fileID: 5165160097419263445, guid: 74ec523e122528545a7c60861182157c, type: 3}
 --- !u!114 &7737600079886230632
 MonoBehaviour:
   m_ObjectHideFlags: 0

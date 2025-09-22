@@ -61,9 +61,7 @@ public class WolfMovement : BaseMovement
     [ServerRpc(RequireOwnership = false)]
     public void AttackDoneServerRpc(bool done)
     {
-        Debug.Log("Set attackdone to true");
         attackDone.Value = done;
-        Debug.Log("attackDone" + attackDone.Value);
     }
 
 }
