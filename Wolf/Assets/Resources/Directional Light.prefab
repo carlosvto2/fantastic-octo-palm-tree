@@ -181,4 +181,4 @@ MonoBehaviour:
   startDangerHour: 18
   endDangerHour: 6
   Sun: {fileID: 578755913577004776}
-  DayDurationInMinutes: 4
+  DayDurationInMinutes: 8

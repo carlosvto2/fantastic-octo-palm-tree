@@ -11,6 +11,9 @@ public class BaseMovement : NetworkBehaviour
     public NetworkVariable<bool> IsAttacking = new NetworkVariable<bool>(
         false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
     );
+    public NetworkVariable<bool> IsHarvesting = new NetworkVariable<bool>(
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+    );
     protected NetworkObject parentNetObj;
 
     // NetworkVariable solo para lectura por los clientes
@@ -27,7 +30,7 @@ public class BaseMovement : NetworkBehaviour
 
     public void Move(Vector3 input, Transform cam)
     {
-        if (cam == null || IsAttacking.Value) return;
+        if (cam == null || IsAttacking.Value || IsHarvesting.Value) return;
         if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
             return;
 
@@ -82,5 +85,17 @@ public class BaseMovement : NetworkBehaviour
     void UpdateRotationServerRpc(Quaternion rotation)
     {
         ModelRotation.Value = rotation;
+    }
+
+    [ServerRpc]
+    public void SetIsHarvestingServerRpc(bool value)
+    {
+        IsHarvesting.Value = value;
+
+        // Stop the animation
+        if (animator != null && parentNetObj.IsOwner)
+        {
+            animator.SetFloat("Speed", 0);
+        }
     }
 }

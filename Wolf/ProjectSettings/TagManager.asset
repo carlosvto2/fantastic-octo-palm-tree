@@ -5,11 +5,12 @@ TagManager:
   serializedVersion: 3
   tags:
   - Villager
+  - Wolf
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Exterior
   - Water
   - UI
   - WolfMouth

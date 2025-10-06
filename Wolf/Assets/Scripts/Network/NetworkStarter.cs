@@ -120,7 +120,8 @@ public class NetworkStarter : MonoBehaviour
                     TargetClientIds = new[] { clientId } // 👈 send only to the correct client
                 }
             };
-            PlayerController.ShowRoleScreenClientRpc(Role, rpcParams);
+            RoleManager PlayerRoleManager = PlayerController.roleManager;
+            PlayerRoleManager.ShowRoleScreenClientRpc(Role, rpcParams);
         }
     }
 
@@ -137,10 +138,16 @@ public class NetworkStarter : MonoBehaviour
                 var PlayerController = playerObj.GetComponent<PlayerController>();
                 if (PlayerController != null)
                 {
-                    if (TransformToWolf)
-                        PlayerController.SetRole(RoleName.Wolf);
-                    else
-                        PlayerController.SetRole(RoleName.Villager);
+                    // Get the role manager of the player
+                    RoleManager PlayerRoleManager = PlayerController.roleManager;
+
+                    if (PlayerRoleManager)
+                    {
+                        if (TransformToWolf)
+                            PlayerRoleManager.SetRole(RoleName.Wolf);
+                        else
+                            PlayerRoleManager.SetRole(RoleName.Villager);
+                    }
                 }
             }
         }

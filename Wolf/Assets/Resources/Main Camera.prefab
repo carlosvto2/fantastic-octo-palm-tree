@@ -151,12 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  distance: 0.9
-  height: 1
+  distance: 4
+  height: 2.5
   rotationSpeed: 5
-  minHeightAngle: 0
-  maxHeightAngle: 65
-  cameraRadius: 0.3
-  collisionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
+  minHeightAngle: 30
+  maxHeightAngle: 30
