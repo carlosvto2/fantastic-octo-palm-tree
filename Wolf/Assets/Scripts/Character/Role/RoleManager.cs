@@ -93,7 +93,7 @@ public class RoleManager : NetworkBehaviour
             InventoryManager Inventory = GetComponent<InventoryManager>();
             if (Inventory)
             {
-                Inventory.InitializeInventoryUI(gameRole);
+                Inventory.InitializeInventoryUI(gameRole.name);
             }
         }
     }

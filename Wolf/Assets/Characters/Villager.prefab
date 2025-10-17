@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 195254801354814361, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
       propertyPath: m_Name
       value: Villager
@@ -72,10 +76,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1524576946745221677, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3720554658630495615, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c09ae302a7bc8c147bca8eb8885c2819, type: 2}
+    - target: {fileID: 7149117711173880816, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -124,7 +140,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1968134238629125728}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a7a912858fc6574483357d7cec06be6, type: 3}
   m_Name: 
@@ -132,6 +148,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 5
   controller: {fileID: 0}
-  IsAttacking: 0
+  IsAttacking:
+    m_InternalValue: 0
+  IsHarvesting:
+    m_InternalValue: 0
   ModelRotation:
     m_InternalValue: {x: 0, y: 0, z: 0, w: 0}

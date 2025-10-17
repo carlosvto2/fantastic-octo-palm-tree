@@ -55,7 +55,7 @@ public class BaseMovement : NetworkBehaviour
                 controller.Move(motion);
                 // Set the Y position always to 0.f
                 Vector3 pos = root.position;
-                pos.y = 0f;
+                pos.y = 30f;
                 root.position = pos;
 
                 // rotación
