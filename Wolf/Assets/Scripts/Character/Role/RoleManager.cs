@@ -1,12 +1,14 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using System.Diagnostics;
 
 public enum RoleName
 {
     None,
     Villager,
-    Wolf
+    Wolf,
+    Witch
 }
 
 [System.Serializable]
