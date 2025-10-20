@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  height: 2
+  distance: 4
+  height: 2.5
   rotationSpeed: 5
-  minHeightAngle: -20
-  maxHeightAngle: 60
+  minHeightAngle: 30
+  maxHeightAngle: 30

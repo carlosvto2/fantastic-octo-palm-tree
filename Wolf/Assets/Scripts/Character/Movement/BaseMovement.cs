@@ -8,7 +8,12 @@ public class BaseMovement : NetworkBehaviour
     public CharacterController controller;
     protected Animator animator;
     private NetworkAnimator netAnim;
-    public bool IsAttacking = false;
+    public NetworkVariable<bool> IsAttacking = new NetworkVariable<bool>(
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+    );
+    public NetworkVariable<bool> IsHarvesting = new NetworkVariable<bool>(
+        false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server
+    );
     protected NetworkObject parentNetObj;
 
     // NetworkVariable solo para lectura por los clientes
@@ -25,7 +30,7 @@ public class BaseMovement : NetworkBehaviour
 
     public void Move(Vector3 input, Transform cam)
     {
-        if (cam == null || IsAttacking) return;
+        if (cam == null || IsAttacking.Value || IsHarvesting.Value) return;
         if (controller == null || !controller.enabled || !controller.gameObject.activeInHierarchy)
             return;
 
@@ -48,6 +53,10 @@ public class BaseMovement : NetworkBehaviour
             {
                 Vector3 motion = move.normalized * moveSpeed * Time.deltaTime;
                 controller.Move(motion);
+                // Set the Y position always to 0.f
+                Vector3 pos = root.position;
+                pos.y = 30f;
+                root.position = pos;
 
                 // rotación
                 if (motion != Vector3.zero)
@@ -62,12 +71,12 @@ public class BaseMovement : NetworkBehaviour
                 root.rotation = ModelRotation.Value;
             }
         }
-            
-            
+
+
         if (animator != null && parentNetObj.IsOwner)
         {
             float speed = move.magnitude;
-            animator.SetFloat("Speed", speed > 0.1f ? 1f : 0f);
+            animator.SetFloat("Speed", speed);
         }
     }
 
@@ -76,5 +85,17 @@ public class BaseMovement : NetworkBehaviour
     void UpdateRotationServerRpc(Quaternion rotation)
     {
         ModelRotation.Value = rotation;
+    }
+
+    [ServerRpc]
+    public void SetIsHarvestingServerRpc(bool value)
+    {
+        IsHarvesting.Value = value;
+
+        // Stop the animation
+        if (animator != null && parentNetObj.IsOwner)
+        {
+            animator.SetFloat("Speed", 0);
+        }
     }
 }

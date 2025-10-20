@@ -2,35 +2,42 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform player; // Reference to playerpublic
-    float distance = 5f;
-    public float height = 2f;
-    public float rotationSpeed = 5f;
+    [Header("Target")]
+    public Transform player;
 
-    public float minHeightAngle = -75f;
-    public float maxHeightAngle = 75f;
-    private float currentX = 0f;
-    private float currentY = 15f;
+    [Header("Camera Settings")]
+    public float distance = 10f;      // distancia al jugador
+    public float height = 5f;         // altura base
+    public float rotationSpeed = 5f;  // sensibilidad mouse
+    public float minHeightAngle = 20f;
+    public float maxHeightAngle = 60f;
+
+    private float currentX = 45f; // ángulo horizontal inicial
+    private float currentY = 30f; // ángulo vertical inicial
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked; // Hide cursor
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void LateUpdate()
     {
         if (!player) return;
 
+        // --- Rotación con mouse ---
         currentX += Input.GetAxis("Mouse X") * rotationSpeed;
         currentY -= Input.GetAxis("Mouse Y") * rotationSpeed;
         currentY = Mathf.Clamp(currentY, minHeightAngle, maxHeightAngle);
 
         Quaternion rotation = Quaternion.Euler(currentY, currentX, 0);
-        Vector3 dir = rotation * new Vector3(0, 0, -distance);
-        Vector3 desiredPosition = player.position + Vector3.up * height + dir;
+
+        // Posición deseada
+        Vector3 desiredPosition = player.position + rotation * new Vector3(0, 0, -distance) + Vector3.up * height;
 
         transform.position = desiredPosition;
-        transform.LookAt(player.position + Vector3.up * 1.5f); // Mira al centro del cuerpo
+
+        // Siempre mirar al jugador
+        transform.LookAt(player.position + Vector3.up * height * 0.5f); // mirar un poco por encima del centro
     }
 
     public void SetTarget(Transform PlayerLocation)

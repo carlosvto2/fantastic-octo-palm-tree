@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 195254801354814361, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
       propertyPath: m_Name
       value: Villager
@@ -72,14 +76,29 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1524576946745221677, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3720554658630495615, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c09ae302a7bc8c147bca8eb8885c2819, type: 2}
+    - target: {fileID: 7149117711173880816, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 607835939398390060}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4622961527818513040}
@@ -89,7 +108,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3bfae5fe63a6dfc4ba412114761b402c, type: 3}
   m_PrefabInstance: {fileID: 1698242405994128177}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4622961527818513040
+--- !u!114 &607835939398390060
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,12 +117,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 1968134238629125728}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1925860789
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &4622961527818513040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968134238629125728}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a7a912858fc6574483357d7cec06be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   moveSpeed: 5
   controller: {fileID: 0}
-  IsAttacking: 0
+  IsAttacking:
+    m_InternalValue: 0
+  IsHarvesting:
+    m_InternalValue: 0
   ModelRotation:
     m_InternalValue: {x: 0, y: 0, z: 0, w: 0}

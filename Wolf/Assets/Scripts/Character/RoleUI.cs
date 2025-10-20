@@ -4,28 +4,7 @@ using UnityEngine;
 
 public class RoleUI : MonoBehaviour
 {
-    public static RoleUI Instance;   // 🔑 Singleton accesible globally
-    private TextMeshProUGUI roleText;
-
-    private void Awake()
-    {
-        // Configure Singleton
-        if (Instance == null) 
-            Instance = this;
-        else
-        {
-            return;
-        }
-
-        // Search the Roletext inside of the canvas
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-        if (canvas != null)
-        {
-            roleText = canvas.transform.Find("RoleText")?.GetComponent<TextMeshProUGUI>();
-            if (roleText != null)
-                roleText.gameObject.SetActive(false);
-        }
-    }
+    public TextMeshProUGUI roleText;
 
     public void ShowRole(string role)
     {

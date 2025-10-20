@@ -1,52 +1,67 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode;
 
-public class DoorInteraction : MonoBehaviour
+public class DoorInteraction : NetworkBehaviour
 {
     [Tooltip("Ángulo de apertura. Usa negativo si quieres que se abra hacia afuera.")]
     public float openAngle = -90f;
     public float openSpeed = 2f;
 
-    [Tooltip("Collider que bloquea físicamente el paso.")]
-    public Collider solidCollider;
-
     private bool isOpen = false;
     private Quaternion closedRotation;
     private Quaternion openRotation;
     private Coroutine currentCoroutine;
-    private GameObject nearbyVillager = null;
+    public InteractionButtonUI InteractionButtonInside;
+    public InteractionButtonUI InteractionButtonOutside;
+    private Collider isPlayerNearby = null;
+    private PlayerController playerController;
+    public string OpenDoorText;
 
     void Start()
     {
         closedRotation = transform.rotation;
         openRotation = Quaternion.Euler(transform.eulerAngles + new Vector3(0, openAngle, 0));
-
-        SetColliderState(true); // La puerta empieza cerrada
     }
 
     void Update()
     {
-        if (nearbyVillager != null)
-        {
-            // DEBUG opcional
-             //Debug.Log("Villager is nearby");
+        if (isPlayerNearby == null) return;
 
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                 //Debug.Log("E pressed");
-                if (currentCoroutine != null) StopCoroutine(currentCoroutine);
-                currentCoroutine = StartCoroutine(ToggleDoor());
-            }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (InteractionButtonInside)
+                InteractionButtonInside.ShowButtonUI(false, isPlayerNearby, "");
+            if (InteractionButtonOutside)
+                InteractionButtonOutside.ShowButtonUI(false, isPlayerNearby, "");
+
+            ToggleDoorServerRpc();
         }
     }
 
-    private IEnumerator ToggleDoor()
+    [ServerRpc(RequireOwnership = false)]
+    public void ToggleDoorServerRpc(ServerRpcParams rpcParams = default)
+    {
+        if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+        currentCoroutine = StartCoroutine(ToggleDoorRoutine());
+
+        ToggleDoorClientRpc();
+    }
+
+    [ClientRpc]
+    private void ToggleDoorClientRpc()
+    {
+        if (IsServer) return;
+
+        if (currentCoroutine != null) StopCoroutine(currentCoroutine);
+        currentCoroutine = StartCoroutine(ToggleDoorRoutine());
+    }
+
+
+    private IEnumerator ToggleDoorRoutine()
     {
         Quaternion targetRotation = isOpen ? closedRotation : openRotation;
         isOpen = !isOpen;
-
-        // Desactiva el collider mientras se abre para evitar bloqueo
-        SetColliderState(false);
 
         while (Quaternion.Angle(transform.rotation, targetRotation) > 0.01f)
         {
@@ -55,35 +70,42 @@ public class DoorInteraction : MonoBehaviour
         }
 
         transform.rotation = targetRotation;
-
-        // Si se ha cerrado, reactiva el collider
-        if (!isOpen)
-        {
-            SetColliderState(true);
-        }
-    }
-
-    private void SetColliderState(bool active)
-    {
-        if (solidCollider != null)
-            solidCollider.enabled = active;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Villager"))
+        if (!InteractionButtonOutside || !InteractionButtonOutside) return;
+
+        playerController = other.GetComponent<PlayerController>();
+        RoleManager playerRoleManager = playerController.roleManager;
+        Role currentRole = playerRoleManager.GetCurrentRole();
+        if (currentRole.name == RoleName.Wolf)
+            return;
+
+        isPlayerNearby = other;
+        Vector3 dir = (other.transform.position - transform.position).normalized;
+            
+        // Escalar product to know the side of the door
+        float dot = Vector3.Dot(transform.forward, dir);
+
+        if (dot > 0)
         {
-            nearbyVillager = other.gameObject;
-             //Debug.Log("Villager entered trigger: " + other.name);
+            InteractionButtonOutside.ShowButtonUI(false, other, "");
+            InteractionButtonInside.ShowButtonUI(true, other, OpenDoorText);
+        }
+        else
+        {
+            InteractionButtonOutside.ShowButtonUI(true, other, OpenDoorText);
+            InteractionButtonInside.ShowButtonUI(false, other, "");
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == nearbyVillager)
-        {
-            nearbyVillager = null;
-             //Debug.Log("Villager exited trigger: " + other.name);
-        }
+        isPlayerNearby = null;
+        if (InteractionButtonOutside)
+            InteractionButtonOutside.ShowButtonUI(false, other, "");
+        if (InteractionButtonInside)
+            InteractionButtonInside.ShowButtonUI(false, other, "");
     }
 }
