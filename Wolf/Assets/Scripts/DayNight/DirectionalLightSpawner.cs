@@ -1,19 +1,26 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.SceneManagement;
 
 public class DirectionalLightSpawner : NetworkBehaviour
 {
     [SerializeField] private DayNightCicle dayNightPrefab;
     private DayNightCicle instance;
 
-    public override void OnNetworkSpawn()
+    private void OnEnable()
     {
-        if (IsServer)
+        if (NetworkManager.Singleton != null)
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        if (!IsServer) return;
+
+        if (sceneName == "Village")
         {
-            // Spawn exactly once from the server so all clients get the same object
-            instance = Instantiate(dayNightPrefab);
-            instance.GetComponent<NetworkObject>().Spawn(true);
-            DontDestroyOnLoad(instance.gameObject); // optional: if you change scenes
+            var instance = Instantiate(dayNightPrefab);
+            instance.GetComponent<NetworkObject>().Spawn();
         }
     }
 }

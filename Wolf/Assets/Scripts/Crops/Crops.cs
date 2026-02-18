@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Crops : MonoBehaviour
 {
@@ -8,15 +9,17 @@ public class Crops : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("crops start");
         if (NetworkManager.Singleton != null)
         {
             // Wait until Netcode is listening
-            NetworkManager.Singleton.OnServerStarted += SpawnCrops;
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += SpawnCrops;
         }
     }
 
-    public void SpawnCrops()
+    private void SpawnCrops(ulong clientId, string sceneName, LoadSceneMode mode)
     {
+        Debug.Log("crops SpawnCrops");
         int childCount = transform.childCount;
 
         if (cropsPrefabs.Length != 4)
