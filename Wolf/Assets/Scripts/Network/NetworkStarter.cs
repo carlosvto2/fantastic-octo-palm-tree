@@ -46,6 +46,20 @@ public class NetworkStarter : MonoBehaviour
         Debug.Log($"Client disconnected: {clientId}");
     }
 
+    public void StartHost()
+    {
+        Debug.Log("host");
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("0.0.0.0", 7777);
+        NetworkManager.Singleton.StartHost();
+    }
+
+    public void StartClient()
+    {
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData("127.0.0.1", 7777);
+        NetworkManager.Singleton.StartClient();
+        StartGame();
+    }
+
     public void StartGame()
     {
         if (!NetworkManager.Singleton.IsServer)
