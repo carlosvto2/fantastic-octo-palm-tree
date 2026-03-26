@@ -916,10 +916,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 275c0165-1809-4c62-ba34-7f6350bca820
+  cloudProjectId: e390caad-0011-4b2f-8baf-778fdfd5225b
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Wolf 2025-04-18_10-31-35
+  projectName: Wolf
   organizationId: roskillon
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

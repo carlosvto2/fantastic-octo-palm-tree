@@ -17,7 +17,8 @@ public class HarvestingManager : MonoBehaviour
     {
         playerController = GetComponent<PlayerController>();
         PlayerRoleManager = playerController.roleManager;
-        currentRole = PlayerRoleManager.GetCurrentRole();
+        if(PlayerRoleManager)
+            currentRole = PlayerRoleManager.GetCurrentRole();
     }
 
     public void BeginHarvest(Crop crop)

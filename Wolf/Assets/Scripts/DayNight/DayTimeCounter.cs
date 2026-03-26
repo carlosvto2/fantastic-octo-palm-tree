@@ -1,9 +1,12 @@
 using TMPro;
+using Unity.Netcode;
+using UnityEngine.SceneManagement;
 using UnityEngine;
+using System.Collections;
 
 public class DayTimeCounter : MonoBehaviour
 {
-    private NetworkStarter NetworkStarter;
+    private GameManager GameManager;
     private TextMeshProUGUI Cont;
     private DayNightCicle dayNightCicle;
 
@@ -12,25 +15,32 @@ public class DayTimeCounter : MonoBehaviour
 
     private bool IsNight = false;
 
-    private void Awake()
-    {
-        Canvas canvas = FindFirstObjectByType<Canvas>();
-        if (canvas != null)
-        {
-            Cont = GameObject.Find("TimeText").GetComponent<TextMeshProUGUI>();
-        }
-    }
-
     private void Start()
     {
-        // Get the network starter of the scene
-        NetworkStarter = FindFirstObjectByType<NetworkStarter>();
+        StartCoroutine(InitializeUI());
+    }
 
-        dayNightCicle = GetComponent<DayNightCicle>();
+    private IEnumerator InitializeUI()
+    {
+        while (true)
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if(!canvas) yield return new WaitForSeconds(1f);
+            
+            while (GameObject.Find("TimeText") == null)
+                yield return new WaitForSeconds(1f);
+
+            Cont = GameObject.Find("TimeText").GetComponent<TextMeshProUGUI>();
+            GameManager = FindFirstObjectByType<GameManager>();
+            dayNightCicle = GetComponent<DayNightCicle>();
+            break;
+        }
     }
 
     private void Update()
     {
+        if(!dayNightCicle || !Cont) return;
+
         float currentHour = dayNightCicle.GetCurrentHour();
 
         if (IsInDangerZone(currentHour))
@@ -49,11 +59,11 @@ public class DayTimeCounter : MonoBehaviour
     {
         bool IsDangerous = hour >= dayNightCicle.startDangerHour || hour < dayNightCicle.endDangerHour;
 
-        // If the day/night changed, inform the NetworkStarter it changed
+        // If the day/night changed, inform the GameManager it changed
         if (IsDangerous != IsNight)
         {
             IsNight = IsDangerous;
-            NetworkStarter.RaiseDayNightChanged(IsNight);
+            GameManager.RaiseDayNightChanged(IsNight);
         }
         return IsDangerous;
     }

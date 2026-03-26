@@ -1,22 +1,27 @@
 using UnityEngine;
 using Unity.Netcode;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
-public class Crops : MonoBehaviour
+public class Crops : NetworkBehaviour
 {
     public GameObject[] cropsPrefabs = new GameObject[4];
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        if (NetworkManager.Singleton != null)
-        {
-            // Wait until Netcode is listening
-            NetworkManager.Singleton.OnServerStarted += SpawnCrops;
-        }
+        Debug.Log("crops network spawn");
+
+        NetworkManager.SceneManager.OnLoadComplete += SpawnCrops;
     }
 
-    public void SpawnCrops()
+    public override void OnNetworkDespawn()
     {
+        NetworkManager.SceneManager.OnLoadComplete -= SpawnCrops;
+    }
+
+    private void SpawnCrops(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        Debug.Log("crops SpawnCrops");
         int childCount = transform.childCount;
 
         if (cropsPrefabs.Length != 4)
