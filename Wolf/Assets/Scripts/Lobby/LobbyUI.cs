@@ -246,7 +246,7 @@ public class LobbyUI : MonoBehaviour
 
             // Tell the LobbyManager to connect to the corresponding lobby using the Join Code
             if (!LobbyManager) return;
-            LobbyManager.JoinRelayWithCode(joinCode);
+            LobbyManager.JoinRelayWithCode(joinCode, joinedLobby);
         }
         catch (LobbyServiceException e)
         {
