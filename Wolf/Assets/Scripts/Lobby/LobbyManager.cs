@@ -12,7 +12,7 @@ using TMPro;
 using Unity.Services.Relay;
 using Unity.Netcode.Transports.UTP;
 using Unity.Collections;
-using System.Collections.Generic;
+using Unity.Services.Vivox;
 
 public class LobbyManager : NetworkBehaviour
 {
@@ -47,7 +47,7 @@ public class LobbyManager : NetworkBehaviour
         // Registrar el comando para que puedas escribir "listlobbies" en la consola
         DebugLogConsole.AddCommand("listlobbies", "Lista los lobbies disponibles", ListLobbies);
         // DebugLogConsole.AddCommand("joinlobbybycode", "Join lobby", JoinLobbyByCode);
-        DebugLogConsole.AddCommand<string>("joinrelaywithcode", "Join relay with code", JoinRelayWithCode);
+        // DebugLogConsole.AddCommand<string>("joinrelaywithcode", "Join relay with code", JoinRelayWithCode);
     }
     public override void OnNetworkSpawn()
     {
@@ -203,7 +203,7 @@ public class LobbyManager : NetworkBehaviour
             
             // Update UI
             LobbyNameNetwork.Value = new FixedString128Bytes(LobbyUI.LobbyNameInput.text);
-            AddPlayerServerRpc(playerName);
+            AddPlayerListServerRpc(playerName);
             
             // Save joinCode in the lobby
             await LobbyService.Instance.UpdateLobbyAsync(hostLobby.Id, new UpdateLobbyOptions
@@ -215,17 +215,22 @@ public class LobbyManager : NetworkBehaviour
             });
             Debug.Log(JoinCode);
 
+            // Inizialize voice chat for host
+            await VoiceChatManager.Instance.InitializeAndLogin(playerName);
+            await VoiceChatManager.Instance.JoinLobbyChannel(hostLobby.Id);
+
         } catch (RelayServiceException e)
         {
             Debug.Log(e);
         }
     }
 
-    public async void JoinRelayWithCode(string joinCode)
+    public async void JoinRelayWithCode(string joinCode, Lobby Lobby)
     {
         if (NetworkManager.Singleton.IsHost) return;
         try
         {
+            joinedLobby = Lobby;
             playerName = PlayerPrefs.GetString("PlayerName", "Player");
             // string joinCode = joinedLobby.Data["RelayJoinCode"].Value;
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
@@ -253,13 +258,15 @@ public class LobbyManager : NetworkBehaviour
 
     #region CLIENT CONNECTION
 
-    private void OnClientConnected(ulong clientId)
+    private async void OnClientConnected(ulong clientId)
     {
-        if (clientId == NetworkManager.Singleton.LocalClientId)
-        {
-            string pname = PlayerPrefs.GetString("PlayerName", "Player");
-            AddPlayerServerRpc(pname);
-        }
+        if (clientId != NetworkManager.Singleton.LocalClientId) return;
+        string pname = PlayerPrefs.GetString("PlayerName", "Player");
+        AddPlayerListServerRpc(pname);
+
+        // Inizialize voice chat for client
+        await VoiceChatManager.Instance.InitializeAndLogin(pname);
+        await VoiceChatManager.Instance.JoinLobbyChannel(joinedLobby.Id);
     }
 
     #endregion END CLIENT CONNECTION
@@ -267,7 +274,7 @@ public class LobbyManager : NetworkBehaviour
     #region PLAYERS
 
     [ServerRpc(RequireOwnership = false)]
-    public void AddPlayerServerRpc(string playerName)
+    public void AddPlayerListServerRpc(string playerName)
     {
         PlayersList.Add(playerName);
     }
@@ -288,14 +295,29 @@ public class LobbyManager : NetworkBehaviour
 
     #region START GAME
 
-    public void StartGame()
+    public async Task StartGame()
     {
         if (!NetworkManager.Singleton.IsHost)
             return;
+        
+        JoinProximityChannelClientRpc("Game" + hostLobby.Id);
 
         NetworkStarter networkStarter = NetworkManager.Singleton.GetComponent<NetworkStarter>();
         if(networkStarter)
             networkStarter.StartGame();
+    }
+
+    [ClientRpc]
+    void JoinProximityChannelClientRpc(string channelName)
+    {
+        Channel3DProperties props = new Channel3DProperties(
+            25, // audibleDistance
+            5,  // conversationalDistance
+            1.0f, // fadeIntensity
+            AudioFadeModel.InverseByDistance
+        );
+
+        VoiceChatManager.Instance.JoinProximityChannel(channelName, props);
     }
 
     #endregion START GAME

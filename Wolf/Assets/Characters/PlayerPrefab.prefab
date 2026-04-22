@@ -2211,6 +2211,7 @@ GameObject:
   - component: {fileID: 7573780334594547088}
   - component: {fileID: -659007676080991255}
   - component: {fileID: 5023857869701751331}
+  - component: {fileID: 3251877211756212874}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -2454,6 +2455,20 @@ MonoBehaviour:
   PlayerRole:
     m_InternalValue: 0
   smokeParticlePrefab: {fileID: 5165160097419263445, guid: 74ec523e122528545a7c60861182157c, type: 3}
+--- !u!114 &3251877211756212874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7823387807614413361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da7042af3153bef479a8dc8beaa42d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  localPlayerHead: {fileID: 7943649576512570499}
 --- !u!1 &9039992685547678977
 GameObject:
   m_ObjectHideFlags: 0
@@ -3022,3 +3037,8 @@ MonoBehaviour:
     TriggerNameHash: 1293411866
     TransitionIndex: 1
   m_Animator: {fileID: 1289055096790920253}
+--- !u!4 &7943649576512570499 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4117957080980108830, guid: 4f0ec5e7302a1294395a81f6bf45c1c1, type: 3}
+  m_PrefabInstance: {fileID: 6275888222768296605}
+  m_PrefabAsset: {fileID: 0}
