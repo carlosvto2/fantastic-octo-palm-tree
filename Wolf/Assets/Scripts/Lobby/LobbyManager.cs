@@ -299,18 +299,25 @@ public class LobbyManager : NetworkBehaviour
     {
         if (!NetworkManager.Singleton.IsHost)
             return;
-        Channel3DProperties props = new Channel3DProperties(
-            25, // audibleDistance
-            5,  // conversationalDistance
-            1.0f, // fadeIntensity
-            AudioFadeModel.InverseByDistance // 👈 obligatorio
-        );
-        // Change to proximity channel
-        await VoiceChatManager.Instance.JoinProximityChannel("GameChannel", props);
+        
+        JoinProximityChannelClientRpc("Game" + hostLobby.Id);
 
         NetworkStarter networkStarter = NetworkManager.Singleton.GetComponent<NetworkStarter>();
         if(networkStarter)
             networkStarter.StartGame();
+    }
+
+    [ClientRpc]
+    void JoinProximityChannelClientRpc(string channelName)
+    {
+        Channel3DProperties props = new Channel3DProperties(
+            25, // audibleDistance
+            5,  // conversationalDistance
+            1.0f, // fadeIntensity
+            AudioFadeModel.InverseByDistance
+        );
+
+        VoiceChatManager.Instance.JoinProximityChannel(channelName, props);
     }
 
     #endregion START GAME

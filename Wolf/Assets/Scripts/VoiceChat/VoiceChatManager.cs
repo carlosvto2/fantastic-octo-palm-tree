@@ -27,13 +27,21 @@ public class VoiceChatManager : MonoBehaviour
 
     public async Task InitializeAndLogin(string playerName)
     {
+        Debug.Log(playerName);
         // Initialize Unity Services ONLY once
         if (!isInitialized)
         {
+            // Ensure Unity Services are initialized before using any service
             if (UnityServices.State != ServicesInitializationState.Initialized)
                 await UnityServices.InitializeAsync();
 
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            // Sign in anonymously ONLY if the player is not already signed in
+            // Unity may persist authentication between sessions, so this check is required
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+            // Initialize Vivox service (voice system)
             await VivoxService.Instance.InitializeAsync();
 
             isInitialized = true;
@@ -42,11 +50,13 @@ public class VoiceChatManager : MonoBehaviour
         // Login ONLY once
         if (!isLoggedIn)
         {
+            // Login to Vivox with the provided player display name
             await VivoxService.Instance.LoginAsync(new LoginOptions()
             {
                 DisplayName = playerName
             });
 
+            // Mark as logged in to avoid duplicate logins
             isLoggedIn = true;
         }
     }
@@ -62,7 +72,6 @@ public class VoiceChatManager : MonoBehaviour
         );
 
         currentChannel = channelName;
-        Debug.Log("Joined lobby voice");
     }
 
     // 🎧 PROXIMITY VOICE
@@ -77,7 +86,6 @@ public class VoiceChatManager : MonoBehaviour
         );
 
         currentChannel = channelName;
-        Debug.Log("Joined proximity voice");
     }
 
     public async Task LeaveCurrentChannel()
